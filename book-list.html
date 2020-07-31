@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Item list</title>
+    <link rel="shortcut icon" href="">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./book-list.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <hr>
+        <h2 id="groupName"></h2>
+        <h6>Signed in as: <span class="username" id="signedInAs"></span></h6>
+        <hr>
+
+        <div class="row">
+            <div class="col-6">
+                <p class="purple-header" id="website"> &nbsp;| &nbsp; </p>
+
+                <div class="progress">
+                    <div class="progress-bar bg-warning zero-width" role="progressbar" id="progress-bar-length"
+                        aria-valuenow=10 aria-valuemin="0" aria-valuemax="100" style="width:70%"></div>
+                </div>
+                <!-- <div class="row money_progress">
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <p>$</p>
+                    <p id="contributions">70</p>
+                    <p>/$</p>
+                    <p id="totalAmount">100</p>
+                </div> -->
+
+                <div class="contribution-box">
+                    <br><br>
+                    <form id="postform" method="POST"> 
+                        <div class="row">
+                            <div class="form-group">
+                                <input for="item-URL" class="form-control url-input" type="text" name="url"
+                                    placeholder="Your Product URL...">
+                            </div>
+                            <div class="form-group">
+                                <input for="item-price" class="form-control price-input" type="text" name="price"
+                                    placeholder="$0.00">
+                            </div>
+                            <button id="add-b" class="btn add-item" type="submit">ADD ITEM</button>
+                        </div>
+                    </form>
+                        <div class="col-12" id="display_items"></div>
+                    <br>
+                    <div class="row contributor-total">
+                        <p>TOTAL: </p>&nbsp;
+                        <p>$</p>
+                        <p id="contributorTotal">0.00</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="pickup-details" id="groupFormInsert">
+                    <p class="purple-header">PICKUP FROM OWNER</p>
+                    <p class="b1">
+                        <b>Admin Name:      </b><div id="admin_name">           </div><br>
+                        <b>Pickup Location: </b><div id="pickup_location">      </div><br>
+                        <b>Pickup Date:     </b><div id="pickup_date">          </div><br>
+                        <b>Contact:         </b><div id="contact">              </div>
+                    </p>
+                    <!-- <button type="button" class="btn add-item" data-toggle="modal" data-target="#groupInfo">Edit Details</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal for editing item -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Item</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                        <form id="itemForm" method="POST">
+                            <!-- Website -->
+                            <div class="form-group">
+                                <label for="website" class="purple-h">Website:</label>
+                                <input class="form-control" id="website" name="website">
+                            </div>
+                            <!-- price -->
+                            <div class="form-group">
+                                <label for="price" class="purple-h">Price:</label>
+                                <input class="form-control" id="pprice" name="price">
+                            </div>
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary changeButton" id="temp" onclick="editItem()">Submit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- modal for editing group info --> 
+    <!-- TODO: add all inputs and insert using JS only with admin power -->
+    <div class="modal fade" id="groupInfo" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Group Info</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                        <form id="groupForm" method="POST">
+                            <!-- Location -->
+                            <div class="form-group">
+                                <label for="location" class="purple-h">Location:</label>
+                                <input class="form-control" id="groupLocation" name="location">
+                            </div>
+                            <!-- Date -->
+                            <div class="form-group">
+                                <label for="date" class="purple-h">Date:</label>
+                                <input class="form-control" id="groupDate" name="date">
+                            </div>
+                            <!-- Group Name -->
+                            <div class="form-group">
+                                <label for="name" class="purple-h">Group Name:</label>
+                                <input class="form-control" id="groupName" name="name">
+                            </div>
+                            <!-- Contact -->
+                            <div class="form-group">
+                                <label for="contact" class="purple-h">Contact:</label>
+                                <input class="form-control" id="groupContact" name="contact">
+                            </div>
+                            <!-- Goal amount -->
+                            <div class="form-group">
+                                <label for="goal" class="purple-h">Goal amount:</label>
+                                <input class="form-control" id="groupGoal" name="goal">
+                            </div>
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary changeButton" id="temp" onclick="changeGroupInfo()">Submit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        const changeGroupInfo = () => {
+            let text =  ((window.location.href).toString()).replace('http://localhost:8000/groups/','');
+            text = text.split("/");
+            const username = text[0].toString();
+            const group_id = text[1].toString();
+
+            let actionurl = `http://localhost:8000/groups/${username}/${group_id}/user/edit_group`;
+            // alert(actionurl);
+            document.getElementById("groupForm").setAttribute("action", actionurl);
+            document.getElementById("groupForm").submit();
+        }
+
+        const findSum = (order) => {
+            let sum = 0;
+            for (let item of order.items) {
+                sum += parseFloat(item.price);
+            }
+            return sum;
+        }
+
+        const deleteItem = (deletedata) => {
+            let arr = deletedata.split(',');
+            // alert(arr[0]);
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("DELETE", `http://localhost:8000/groups/${arr[2]}/${arr[1]}/user/${arr[0]}`, false);
+            xhttp.send();
+            location.reload();
+        }
+
+        const changeButtonId = (item_id) => {
+            // edititem function helper
+            document.getElementsByClassName("changeButton")[0].id = item_id;
+        }
+
+        const editItem = () => {
+            let text =  ((window.location.href).toString()).replace('http://localhost:8000/groups/','');
+            text = text.split("/");
+            const username = text[0].toString();
+            const group_id = text[1].toString();
+            let item_idANDorderedBy = document.getElementsByClassName("changeButton")[0].id;
+
+            let arr = item_idANDorderedBy.split(',');
+
+            let actionurl = `http://localhost:8000/groups/${username}/${group_id}/user/${arr[0]}/${arr[1]}/edit_item`;
+            // alert(actionurl);
+            document.getElementById("itemForm").setAttribute("action", actionurl);
+            document.getElementById("itemForm").submit();
+            // location.reload();
+        }
+
+        const loadItems = () => {
+            //get info from url
+            let text =  ((window.location.href).toString()).replace('http://localhost:8000/groups/','');
+            text = text.split("/");
+            const displayusername = text[0].toString();
+            const displaygroupid = text[1].toString();
+            
+            //http request to get the group with group_id
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("GET", `http://localhost:8000/groups/${displayusername}/${displaygroupid}`, false);
+            xhttp.send();
+            const group = JSON.parse(xhttp.responseText);
+            // console.log(group);
+
+            // setup form action for add item
+            let actionurl = `http://localhost:8000/groups/${displayusername}/${displaygroupid}/user/add_item`;
+            document.getElementById("postform").setAttribute("action", actionurl);
+
+            //display info
+            document.getElementById('signedInAs').innerHTML         = document.getElementById('signedInAs').innerHTML + displayusername;
+            document.getElementById('admin_name').innerHTML         = group.admin_name + document.getElementById('admin_name').innerHTML;
+            document.getElementById('pickup_location').innerHTML    = group.pickup_location + document.getElementById('pickup_location').innerHTML;
+            document.getElementById('pickup_date').innerHTML        = group.pickup_date + document.getElementById('pickup_date').innerHTML;
+            document.getElementById('contact').innerHTML            = group.contact + document.getElementById('contact').innerHTML;
+            document.getElementById('groupName').innerHTML          = group.group_name + document.getElementById('groupName').innerHTML;
+            document.getElementById('website').innerHTML            = group.website + document.getElementById('website').innerHTML + "$" + group.sum +"/$" + group.goal_amount;
+            
+            // if user is admin, load everything in the group's order
+            if (group.admin_name == displayusername){
+                //insert items
+                for (let order of group.info) {
+                    let sum = findSum(order);
+                    for (let item of order.items) {
+                        const x = `
+                            <div id="product" class="product">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="url"><b>${item.url} </b>&nbsp;<span class="price">$${item.price}</span></div>
+                                        <div class="user"><b>Ordered by:</b> ${order.username}</div>
+                                    </div>
+                                    <button type="button" class="btn add-item" data-toggle="modal" onClick="changeButtonId('${item.id},${order.username}')" data-target="#myModal">Edit</button>
+                                    <div class="col-2"><button id="remove-b" class="btn delete-item" onClick="deleteItem('${item.id},${displaygroupid},${displayusername}')">X </button></div>
+                                </div>
+                            </div>
+                        `
+                        document.getElementById('display_items').innerHTML = document.getElementById('display_items').innerHTML + x;
+                    }
+                    //insert sum
+                    const sumValue = `<div>Subtotal is ${sum}</div>`
+                    document.getElementById('display_items').innerHTML = document.getElementById('display_items').innerHTML + sumValue;
+                }
+                //insert button to edit group info
+                const editGroupButton = `<button type="button" class="btn add-item" data-toggle="modal" data-target="#groupInfo">Edit Details</button>`
+                document.getElementById('groupFormInsert').innerHTML = document.getElementById('groupFormInsert').innerHTML + editGroupButton;
+                
+            //if user is not admin
+            }else{
+                let sum = findSum(group.info);
+                // alert(sum);
+                // alert(group.sum)
+                for (let item of group.info.items) {
+                    const x = `
+                        <div id="product" class="product">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="url"><b>${item.url}</b></div>
+                                    <div class="price2">$${item.price}</div>
+                                </div>
+                                <button type="button" class="btn add-item" data-toggle="modal" onClick="changeButtonId('${item.id},${displayusername}')" data-target="#myModal">Edit</button>
+                                <div class="col-2"><button id="remove-b" class="btn delete-item" onClick="deleteItem('${item.id},${displaygroupid},${displayusername}')">X </button></div>
+                            </div>
+                        </div>
+                    `
+                    document.getElementById('display_items').innerHTML = document.getElementById('display_items').innerHTML + x;
+                }
+                const x = `
+                        <div>Subtotal is ${sum}</div>
+                    `
+                document.getElementById('display_items').innerHTML = document.getElementById('display_items').innerHTML + x;
+            }
+        }
+
+        loadItems();
+    </script>
+
+    <style>
+        
+        .signed-in{
+            margin-left: 48rem;
+            font-size: 20px;
+        }
+        .username{
+            color:  #F0BC40;
+        }
+        .purple-header{
+            color: #6D7993;
+            font-size: 36px;
+        }
+        
+        .progress {
+            height: 12px;
+            width: 550px;
+            margin: 20px 0px 20px 0px;
+        }
+
+        .contribution-box{
+            width: 550px;
+            height: fit-content;
+            background-color: #6D7993;
+            border-radius: 15px;
+            overflow-x: hidden;
+            margin-bottom: 2rem; 
+        }
+
+        .contributor-name{
+            margin-left: 3rem;
+            padding-top: 2rem;
+            font-size: 22px;
+            color: white;
+            font-style: bold;
+        }
+
+        .add-product{
+            margin-left: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .url-input{
+            width: 250px;
+            margin-left: 4rem;
+            margin-right: 0.5rem;
+        }
+        .price-input{
+            width: 80px;
+        }
+        .add-item{
+            font-size: 14px;
+            font-weight: 600;
+            height: 2.4rem;
+            margin-left: 0.5rem;
+            background-color: #F0BC40;
+            color: #f5f5f5;
+        }
+
+        .product{
+            /* border: 1px solid lightgrey; */
+            background-color: #EBEBEB;
+            width: 435px;
+            height: 75px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            margin-left: 2rem
+        }
+        .url{
+            color: #5e5e5e;
+            margin-left: 1.5rem;
+            line-height: 40px;
+        }
+        .price{
+            color: #5e5e5e;
+            font-style: italic;
+        }
+        .price2{
+            color: #5e5e5e;
+            margin-left: 1.5rem;
+        }
+        .user{
+            color: #5e5e5e;
+            margin-left: 1.5rem;
+        }
+        .delete-item{
+            background-color: white;
+            color: #5e5e5e;
+            font-size: 16px;
+            font-style: bold;
+            width: 40px;
+            margin-top: 1rem;
+            border-radius: 50%;
+        }
+        .delete-item:hover{
+            background-color: lightgrey;
+        }
+
+        .contributor-total{
+            color: white;
+            margin-left: 3rem;
+            position: absolute;    
+        }
+
+        .pickup-details{
+            background-color: #f5f5f5;
+            overflow: auto;
+            width: 100%;
+            border-radius: 12px;
+            text-align: center;
+            padding: 2rem;
+            margin-left: 1rem;
+        }
+        .purple-header{
+            font-size: 30px;
+            color: #6D7993;
+            font-weight: 600;
+        }
+        .b1{
+            margin: 0;
+        }
+    </style>
+    
+</body>
+
+</html>

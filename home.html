@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shippie | Welcome</title>
+    <link rel="shortcut icon" href="">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <br>
+        <img class="logo-big" src="logo-purple.png" width=200>
+        <br><br>
+
+        <div class="row middle">
+            <div class="col-6">
+                <div class="small-text">Not a user yet? Join the Shippie community today!</div>
+                <div class="home-card create-acc-card">
+                    <h3 class="big-header">Create an Account</h3>
+                    <form id="createAccountForm" action="http://localhost:8000/user" method="POST">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1" class="purple-h">Username:</label>
+                            <input id="createUsername" class="form-control" name="username">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1" class="purple-h">Password:</label>
+                            <input id="createPassword" class="form-control" type="password" name="password">
+                        </div>
+                        <br>
+                        <button type="button" onclick="createAccount()" class="btn yellow-btn">CREATE ACCOUNT</button>
+                        <!-- <button type="submit" class="btn yellow-btn">CREATE ACCOUNT</button> -->
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="small-text2">Already a user?</div>
+                <div class="home-card login-card">
+                    <h3 class="big-header">Login</h3>
+                    <form id="loginForm" action="http://localhost:8000/login" method="POST">
+                        <div class="form-group">
+                            <label for="userlogin" class="purple-h">Username:</label>
+                            <input id="userlogin" class="form-control" name="username">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passlogin" class="purple-h">Password:</label>
+                            <input id="passlogin" class="form-control" type="password" name="password">
+                        </div>
+                        <br>
+                        <button type="button" onclick="login()" class="btn yellow-btn">LOGIN</button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .container{
+            background-color: #6D7993;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .logo-big{
+            margin-left: 4rem;
+        }
+
+        .small-text{
+            font-size: 12px;
+            font-style: italic;
+            color: #e5e5e5;
+            margin-bottom: 1rem;
+            margin-left: 7rem;
+        }
+        .small-text2{
+            font-size: 12px;
+            font-style: italic;
+            color: #e5e5e5;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
+        
+        .home-card{
+            padding: 3rem;
+            border-radius: 18px;
+            background-color: #EBEBEB;
+        }
+
+        .create-acc-card{
+            margin-left: 6rem;
+        }
+
+        .login-card{
+            margin-right: 6rem;
+        }
+
+        .big-header{
+            padding-bottom: 2rem;
+            color: #5e5e5e;
+        }
+
+        .purple-h{
+            color: #6D7993;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .yellow-btn{
+            border-radius: 25px;
+            background-color: #F0BC40;
+            color: white;
+            font-weight: 600;
+            padding: 4px 18px 4px 18px;
+            width: 220px;
+            margin-left: 4rem;
+        }
+
+        .form-control{
+            border-radius: 18px;
+        }
+
+
+    </style>
+
+    <script>
+        const createAccount = () => {
+            let username = document.getElementById('createUsername').value;
+            let password = document.getElementById('createPassword').value;
+            if (username == "" || password == ""){
+                alert("Please fill in all required fields!");
+            }
+            else{
+                const xhttp = new XMLHttpRequest();
+                xhttp.open("POST", `http://localhost:8000/verify/${username}`, false);
+                xhttp.send();
+                const verified = xhttp.responseText;
+                if (verified == "fail"){
+                    alert("username already taken");
+                    location.reload();
+                }else{
+                    document.getElementById("createAccountForm").submit();
+                    alert("verified " + verified);                  //change to "Account successfully created"
+                }  
+            }
+        }
+        
+        const login = () => {
+            let username = document.getElementById('userlogin').value;
+            let password = document.getElementById('passlogin').value;
+            if (username == "" || password == ""){
+                alert("Please fill in all required fields!");
+            }
+            else{
+                const xhttp = new XMLHttpRequest();
+                xhttp.open("POST", `http://localhost:8000/verify/${username}/${password}`, false);
+                xhttp.send();
+                const verified = xhttp.responseText;
+                if (verified == "fail"){
+                    alert("System error");
+                    location.reload();
+                }else if (verified == "success"){
+                    document.getElementById("loginForm").submit();
+                    // alert("verified " + verified);
+                }else if (verified == "incorrect username"){
+                    alert("Incorrect username");
+                    location.reload();
+                }else if (verified == "incorrect password"){
+                    alert("Incorrect password");
+                    location.reload();
+                }else {
+                    alert("Please retry");
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

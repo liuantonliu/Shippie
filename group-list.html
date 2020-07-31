@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Group list</title>
+    <link rel="shortcut icon" href="">
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- <br>
+        <img class="logo-big" src="logo-purple.png" width=150> -->
+        <!-- <img class="logo-big" src="filters.png" width=200> -->
+        <br>
+        <h1 class="big-heading">Your Groups</h1>
+        <h6>signed in as: <span class="username" id="signedInAs"></span></h6>
+        <br>
+        <button type="button" class="btn create-group" data-toggle="modal" data-target="#myModal">CREATE GROUP</button>
+        <br><br>
+        <div>
+            <h1>Admin</h1>
+            <div class="row" id="groupsAdmin"></div>
+            <h1>Normal</h1>
+            <div class="row" id="groupsNormal"></div>
+            <h1>Avail</h1>
+            <div class="row" id="groupsAvail"></div>
+        </div>
+    </div>    
+
+    <!-- Modal https://www.w3schools.com/bootstrap/bootstrap_modal.asp -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Group</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                        <form id="groupForm" method="POST">
+                            <!-- group_name -->
+                            <div class="form-group">
+                                <label for="group_name" class="purple-h">Group Name:</label>
+                                <input class="form-control" id="group_name" name="group_name">
+                            </div>
+                            <!-- pickup_location -->
+                            <div class="form-group">
+                                <label for="pickup_location" class="purple-h">Pickup Location:</label>
+                                <input class="form-control" id="pickup_location" name="pickup_location">
+                            </div>
+                            <!-- pickup_date -->
+                            <div class="form-group">
+                                <label for="pickup_date" class="purple-h">Pickup Date:</label>
+                                <input class="form-control" id="pickup_date" name="pickup_date">
+                            </div>
+                            <!-- contact -->
+                            <div class="form-group">
+                                <label for="contact" class="purple-h">Contact:</label>
+                                <input class="form-control" id="contact" name="contact">
+                            </div>
+                            <!-- goal_amount -->
+                            <div class="form-group">
+                                <label for="goal_amount" class="purple-h">Goal Amount:</label>
+                                <input class="form-control" id="goal_amount" name="goal_amount">
+                            </div>
+                            <!-- website -->
+                            <div class="form-group">
+                                <label for="website" class="purple-h">Website:</label>
+                                <input class="form-control" id="website" name="website">
+                            </div>
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="addGroup()">Submit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        const findSum = (group) => {
+            // console.log(group.orders[0]);
+            let sum = 0;
+            for (let order of group.orders) {
+                for (let item of order.items) {
+                    // console.log(item);
+                    sum += parseFloat(item.price);
+                }
+            }
+            // alert(sum);
+            return sum;
+        }
+
+        const viewOrder = (id) => {
+            const user =  ((window.location.href).toString()).replace('http://localhost:8000/groups/',''); 
+            window.location.href = "http://localhost:8000/groups/" + user + "/" + id +"/user";
+        }
+
+        const addGroup = () => {
+            const user =  ((window.location.href).toString()).replace('http://localhost:8000/groups/','');
+            let actionurl = `http://localhost:8000/group/create/${user}`;
+            document.getElementById("groupForm").setAttribute("action", actionurl);
+            document.getElementById("groupForm").submit();
+            location.reload();
+        }
+
+        const deleteGroup = (group_id) => {
+            const user =  ((window.location.href).toString()).replace('http://localhost:8000/groups/','');
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("DELETE", `http://localhost:8000/group/${group_id}/${user}`, false);
+            xhttp.send();
+            location.reload();
+        }
+
+        const removeUser = (group_id) => {
+            const user =  ((window.location.href).toString()).replace('http://localhost:8000/groups/','');
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("DELETE", `http://localhost:8000/group/${group_id}/${user}/remove`, false);
+            xhttp.send();
+            location.reload();
+        }
+
+        const joinGroup = (group_id) => {
+            const user =  ((window.location.href).toString()).replace('http://localhost:8000/groups/','');
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("POST", `http://localhost:8000/group/${group_id}/${user}`, false);
+            xhttp.send();
+            location.reload();
+        }
+
+        const loadGroups = () => {
+            const user =  ((window.location.href).toString()).replace('http://localhost:8000/groups/','');
+            document.getElementById('signedInAs').innerHTML = document.getElementById('signedInAs').innerHTML + user;
+
+            //power: normal
+            const xhttp1 = new XMLHttpRequest();
+            xhttp1.open("GET", `http://localhost:8000/group/findnormal/${user}`, false);
+            xhttp1.send();
+            const groupsnormal = JSON.parse(xhttp1.responseText);
+            // console.log(groupsnormal);
+
+            //power: admin
+            const xhttp2 = new XMLHttpRequest();
+            xhttp2.open("GET", `http://localhost:8000/group/findadmin/${user}`, false);
+            xhttp2.send();
+            const groupsadmin = JSON.parse(xhttp2.responseText);
+            // console.log(groupsadmin);
+
+            //power: avail
+            const xhttp3 = new XMLHttpRequest();
+            xhttp3.open("GET", `http://localhost:8000/group/findavail/${user}`, false);
+            xhttp3.send();
+            const groupsavail = JSON.parse(xhttp3.responseText);
+            // console.log(groupsadmin);
+
+            for (let group of groupsadmin) {                                            //ARE THE \\ NEEDED??
+                let sum = findSum(group);
+                const x = `
+                    <div class="col-6">
+                        <div class="card group-card">                                   
+                            <div class="card-body">
+                                <h5 class="card-title">${group.group_name} by ${group.admin_name}</h5>
+                                <div> ${sum} out of ${group.goal_amount} </div>
+                                <button type="button" class="btn cancel" onClick = "deleteGroup(\'${group._id}'\)">Cancel Order</button>
+                                <button type="button" class="btn view-orders" onClick="viewOrder(\'${group._id}'\)">View Orders</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                `
+                document.getElementById('groupsAdmin').innerHTML = document.getElementById('groupsAdmin').innerHTML + x;
+            }
+
+            for (let group of groupsnormal) {
+                let sum = findSum(group);
+                const x = `
+                    <div class="col-6">
+                        <div class="card group-card">
+                            <div class="card-body">
+                                <h5 class="card-title">${group.group_name} by ${group.admin_name}</h5>
+                                <div> ${sum} out of ${group.goal_amount} </div>
+                                <button type="button" class="btn cancel" onClick = "removeUser(\'${group._id}'\)">Remove Me</button>
+                                <button type="button" class="btn view-orders" onClick="viewOrder(\'${group._id}'\)">Setup Your Order</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    `
+                document.getElementById('groupsNormal').innerHTML = document.getElementById('groupsNormal').innerHTML + x;
+            }
+
+            for (let group of groupsavail) {
+                let sum = findSum(group);
+                const x = `
+                    <div class="col-6">
+                        <div class="card group-card">
+                            <div class="card-body">
+                                <h5 class="card-title">${group.group_name} by ${group.admin_name}</h5>
+                                <div> ${sum} out of ${group.goal_amount} </div>
+                                <button type="button" class="btn view-orders" onClick="joinGroup(\'${group._id}'\)">Join Group</button>
+                            </div>
+                        </div>
+                    </div>
+                    `
+                document.getElementById('groupsAvail').innerHTML = document.getElementById('groupsAvail').innerHTML + x;
+
+            }
+        }
+        
+        loadGroups();
+    </script>
+
+    <style>
+        .username{
+            color:  #F0BC40;
+        }
+        .container{
+            padding: 4rem 6rem 0rem 6rem;
+            background-color: #6D7993;
+            overflow: auto;
+            width: 100vw;
+            padding-bottom: 10vh; 
+        }
+
+        .big-heading{
+            padding-bottom: 1rem;
+            color: #f5f5f5;
+            font-size: 35px;
+        }
+        
+        .logo-big{
+            margin-left: 4rem;
+        }
+        .group-card{
+            margin-bottom: 5px;
+            border-radius: 10px;
+            background: #EBEBEB;
+            border: none;
+        }
+
+        .cancel{
+            border-radius: 25px;
+            background-color: grey;
+            color: white;
+            padding: 4px 18px 4px 18px;
+        }
+
+        .view-orders{
+            border-radius: 25px;
+            background-color: #F0BC40;
+            color: white;
+            font-weight: 600;
+            padding: 4px 18px 4px 18px;
+        }
+
+        .card-title{
+            color: #5e5e5e;
+        }
+
+        .id-text{
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .create-group{
+            background-color: #5e5e5e;
+            color: #f5f5f5;
+            font-weight: 600;
+        }
+    </style>
+    
+</body>
+
+</html>
