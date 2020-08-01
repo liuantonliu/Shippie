@@ -8,11 +8,9 @@
     <title>Item list</title>
     <link rel="shortcut icon" href="">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./book-list.css">
 </head>
 
 <body>
-
     <div class="container">
         <hr>
         <h2 id="groupName"></h2>
@@ -21,20 +19,14 @@
 
         <div class="row">
             <div class="col-6">
+                <!-- numerical progress -->
                 <p class="purple-header" id="website"> &nbsp;| &nbsp; </p>
-
+                <!-- progress bar -->
                 <div class="progress">
-                    <div class="progress-bar bg-warning zero-width" role="progressbar" id="progress-bar-length"
-                        aria-valuenow=10 aria-valuemin="0" aria-valuemax="100" style="width:70%"></div>
+                    <div class="progress-bar bg-warning zero-width" role="progressbar" id="progress-bar-length" aria-valuenow=10 aria-valuemin="0" aria-valuemax="100" style="width:70%">
+                    </div>
                 </div>
-                <!-- <div class="row money_progress">
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <p>$</p>
-                    <p id="contributions">70</p>
-                    <p>/$</p>
-                    <p id="totalAmount">100</p>
-                </div> -->
-
+                <!-- add item -->
                 <div class="contribution-box">
                     <br><br>
                     <form id="postform" method="POST"> 
@@ -50,15 +42,18 @@
                             <button id="add-b" class="btn add-item" type="submit">ADD ITEM</button>
                         </div>
                     </form>
-                        <div class="col-12" id="display_items"></div>
+                    <div class="col-12" id="display_items"></div>
                     <br>
+                    <!-- TODO: delete? -->
                     <div class="row contributor-total">
                         <p>TOTAL: </p>&nbsp;
                         <p>$</p>
                         <p id="contributorTotal">0.00</p>
                     </div>
+                    <!-- TODO: delete? -->
                 </div>
             </div>
+            <!-- Pickup details box -->
             <div class="col-5">
                 <div class="pickup-details" id="groupFormInsert">
                     <p class="purple-header">PICKUP FROM OWNER</p>
@@ -68,7 +63,6 @@
                         <b>Pickup Date:     </b><div id="pickup_date">          </div><br>
                         <b>Contact:         </b><div id="contact">              </div>
                     </p>
-                    <!-- <button type="button" class="btn add-item" data-toggle="modal" data-target="#groupInfo">Edit Details</button> -->
                 </div>
             </div>
         </div>
@@ -105,7 +99,6 @@
     </div>
 
     <!-- modal for editing group info --> 
-    <!-- TODO: add all inputs and insert using JS only with admin power -->
     <div class="modal fade" id="groupInfo" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -215,20 +208,19 @@
             xhttp.open("GET", `http://localhost:8000/groups/${displayusername}/${displaygroupid}`, false);
             xhttp.send();
             const group = JSON.parse(xhttp.responseText);
-            // console.log(group);
 
             // setup form action for add item
             let actionurl = `http://localhost:8000/groups/${displayusername}/${displaygroupid}/user/add_item`;
             document.getElementById("postform").setAttribute("action", actionurl);
 
             //display info
+            document.getElementById('groupName').innerHTML          = group.group_name + document.getElementById('groupName').innerHTML;
             document.getElementById('signedInAs').innerHTML         = document.getElementById('signedInAs').innerHTML + displayusername;
+            document.getElementById('website').innerHTML            = group.website + document.getElementById('website').innerHTML + "$" + group.sum +"/$" + group.goal_amount;
             document.getElementById('admin_name').innerHTML         = group.admin_name + document.getElementById('admin_name').innerHTML;
             document.getElementById('pickup_location').innerHTML    = group.pickup_location + document.getElementById('pickup_location').innerHTML;
             document.getElementById('pickup_date').innerHTML        = group.pickup_date + document.getElementById('pickup_date').innerHTML;
             document.getElementById('contact').innerHTML            = group.contact + document.getElementById('contact').innerHTML;
-            document.getElementById('groupName').innerHTML          = group.group_name + document.getElementById('groupName').innerHTML;
-            document.getElementById('website').innerHTML            = group.website + document.getElementById('website').innerHTML + "$" + group.sum +"/$" + group.goal_amount;
             
             // if user is admin, load everything in the group's order
             if (group.admin_name == displayusername){
@@ -251,18 +243,17 @@
                         document.getElementById('display_items').innerHTML = document.getElementById('display_items').innerHTML + x;
                     }
                     //insert sum
+                    //TODO: check if sum is 0
                     const sumValue = `<div>Subtotal is ${sum}</div>`
                     document.getElementById('display_items').innerHTML = document.getElementById('display_items').innerHTML + sumValue;
                 }
                 //insert button to edit group info
                 const editGroupButton = `<button type="button" class="btn add-item" data-toggle="modal" data-target="#groupInfo">Edit Details</button>`
                 document.getElementById('groupFormInsert').innerHTML = document.getElementById('groupFormInsert').innerHTML + editGroupButton;
-                
+   
             //if user is not admin
             }else{
                 let sum = findSum(group.info);
-                // alert(sum);
-                // alert(group.sum)
                 for (let item of group.info.items) {
                     const x = `
                         <div id="product" class="product">
@@ -278,9 +269,7 @@
                     `
                     document.getElementById('display_items').innerHTML = document.getElementById('display_items').innerHTML + x;
                 }
-                const x = `
-                        <div>Subtotal is ${sum}</div>
-                    `
+                const x = `<div>Subtotal is ${sum}</div>`
                 document.getElementById('display_items').innerHTML = document.getElementById('display_items').innerHTML + x;
             }
         }
@@ -411,5 +400,4 @@
     </style>
     
 </body>
-
 </html>
