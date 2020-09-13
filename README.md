@@ -2,7 +2,7 @@
 
 TOHacks 2020 Submission
 
-Authors: Titomi Adebajo, Shivani Chidella, Anton Liu, Jennifer Ye
+Authors: Shivani Chidella, Anton Liu, Jennifer Ye
 
 Shippie is an online web platform that allows users to create group orders together. Use Shippie to save on shipping fees with friends, family, or maybe strangers - or manage multiple orders on your favourite sites!
 
@@ -19,3 +19,5 @@ node book-api.js
 Then, enter http://localhost:8000 on your favourite browser.
 
 Happy Shippie Shopping!
+
+HELLOOOOOOO
