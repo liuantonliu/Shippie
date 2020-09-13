@@ -18,6 +18,4 @@ node book-api.js
 
 Then, enter http://localhost:8000 on your favourite browser.
 
-Happy Shippie Shopping!
-
-HELLOOOOOOO
+Happy Shippie Shopping!:)
