@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Group list</title>
     <link rel="shortcut icon" href="">
-    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
@@ -109,7 +108,7 @@
             let actionurl = `http://localhost:8000/group/create/${user}`;
             document.getElementById("groupForm").setAttribute("action", actionurl);
             document.getElementById("groupForm").submit();
-            location.reload();
+            // location.reload();
         }
 
         const deleteGroup = (group_id) => {
