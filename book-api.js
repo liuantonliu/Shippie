@@ -175,7 +175,6 @@ app.post('/group/create_empty/:username', async (req, res) => {
         }]
     };
     
-    // console.log(group);
     let p = await col.insertOne(group);
 
     res.redirect("http://localhost:8000/groups/"+ username);
@@ -191,6 +190,7 @@ app.post('/group/create/:username', async (req, res) => {
     const goal_amount = req.body.goal_amount;
     const website = req.body.website;
     const group_name = req.body.group_name;
+
     //create group
     col = db.collection("Groups");
     let group = {
@@ -206,7 +206,8 @@ app.post('/group/create/:username', async (req, res) => {
             "items": []
         }]
     };
-    // console.log(group);
+    console.log("HELLO");
+    console.log(group);
     let p = await col.insertOne(group);
     res.redirect("http://localhost:8000/groups/"+ username);
     console.log('SUCCESS: Group is added to the database');
