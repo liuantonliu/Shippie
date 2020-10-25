@@ -8,7 +8,7 @@ Shippie is an online web platform that allows users to create group orders toget
 
 ## Running Shippie
 
-To run Shippie, download the master branch as a zip file. Then install node.js with express, mongodb and bson.
+To run Shippie, download the master branch as a zip file. Then install node.js with express and mongodb.
 In terminal, cd to the file and run the following command:
 
 ```

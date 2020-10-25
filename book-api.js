@@ -1,5 +1,7 @@
 // database stuff
 const MongoClient = require('mongodb').MongoClient;
+var mongoose = require('mongoose');
+
 let ObjectId = require('mongodb').ObjectID;
 const uri = "mongodb+srv://liuantonliu:ep84x82k@shippie-iuyos.mongodb.net/shippie?retryWrites=true&w=majority"
 const client = new MongoClient(uri, {useUnifiedTopology: true});
@@ -57,6 +59,7 @@ const findSum = (group) => {
 // SEND USER TO HOME.HTML
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/home.html');
+    // res.render("logo-purple.png");
     console.log('SUCCESS: User is at homepage');
 });
 
@@ -78,10 +81,23 @@ app.post('/login', async (req, res) => { //ASYNC BECAUSE NEEDS ALLUSERS TO COME 
     res.send(`User Not Found; Username/Password Incorrect`);
 });
 
+
 // SEND USER TO GROUP-LIST.HTML (only using for adding username in url)
 app.get('/groups/:username', async (req, res) => {
+    
     // const user = req.params.username;
     // console.log(user);
+    // if (req.session && req.session.userId) {
+    //     res.sendFile(__dirname + '/group-list.html');
+    //     return;
+    //   } else {
+    //     var err = new Error('You must be logged in to view this page.');
+    //     err.status = 401;
+    //     return next(err);
+    //   }
+
+    //const user = req.params.username;
+    //console.log(user);
     // let users = await allUsers();
     // console.log(users);
     // for (let i of users) {
