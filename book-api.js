@@ -175,7 +175,6 @@ app.post('/group/create_empty/:username', async (req, res) => {
         }]
     };
     
-    // console.log(group);
     let p = await col.insertOne(group);
 
     res.redirect("http://localhost:8000/groups/"+ username);
@@ -191,6 +190,7 @@ app.post('/group/create/:username', async (req, res) => {
     const goal_amount = req.body.goal_amount;
     const website = req.body.website;
     const group_name = req.body.group_name;
+
     //create group
     col = db.collection("Groups");
     let group = {
@@ -206,7 +206,8 @@ app.post('/group/create/:username', async (req, res) => {
             "items": []
         }]
     };
-    // console.log(group);
+    console.log("HELLO");
+    console.log(group);
     let p = await col.insertOne(group);
     res.redirect("http://localhost:8000/groups/"+ username);
     console.log('SUCCESS: Group is added to the database');
@@ -383,6 +384,7 @@ app.get('/groups/:username/:group_id', async (req, res) => {
 app.post('/groups/:username/:group_id/user/add_item', async (req, res) => {
     const url = req.body.url;
     const price = req.body.price;
+    const quantity = req.body.quantity;
     const username = req.params.username;
     const group_id = req.params.group_id;
     // console.log(username,group_id);
@@ -391,6 +393,7 @@ app.post('/groups/:username/:group_id/user/add_item', async (req, res) => {
         "id": create_UUID(),
         "url": url,
         "price": price,
+        "quantity" : quantity,
     };
     // console.log(push_item);
 
@@ -433,6 +436,7 @@ app.delete('/groups/:username/:group_id/user/:item_id', async (req, res) => {
 app.post('/groups/:username/:group_id/user/:item_id/:orderedBy/edit_item', async (req, res) => {
     const website = req.body.website;
     const price = req.body.price;
+    const quantity = req.body.quantity;
     const item_id = req.params.item_id;
     const username = req.params.username;
     const group_id = req.params.group_id;
@@ -461,6 +465,7 @@ app.post('/groups/:username/:group_id/user/:item_id/:orderedBy/edit_item', async
         "id": item_id,
         "url": website,
         "price": price,
+        "quantity" : quantity,
     };
     const setJson = {[setString] : set_item};
     // console.log(setJson);

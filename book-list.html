@@ -39,6 +39,10 @@
                                 <input for="item-price" class="form-control price-input" type="text" name="price"
                                     placeholder="$0.00">
                             </div>
+                            <div class="form-group">
+                                <input for="item-quantity" class="form-control quantity-input" type="text" name="quantity"
+                                    placeholder="1">
+                            </div>
                             <button id="add-b" class="btn add-item" type="submit">ADD ITEM</button>
                         </div>
                     </form>
@@ -86,7 +90,12 @@
                             <!-- price -->
                             <div class="form-group">
                                 <label for="price" class="purple-h">Price:</label>
-                                <input class="form-control" id="pprice" name="price">
+                                <input class="form-control" id="price" name="price">
+                            </div>
+                            <!-- Quantity -->
+                            <div class="form-group">
+                                <label for="quantity" class="purple-h">Quantity:</label>
+                                <input class="form-control" id="quantity" name="quantity">
                             </div>
                         </form>
                 </div>
@@ -224,7 +233,7 @@
             
             // if user is admin, load everything in the group's order
             if (group.admin_name == displayusername){
-                //insert items
+                //insert items - HOW TO PUT QUANTITY HERE - @123
                 for (let order of group.info) {
                     let sum = findSum(order);
                     for (let item of order.items) {
@@ -232,7 +241,7 @@
                             <div id="product" class="product">
                                 <div class="row">
                                     <div class="col-8">
-                                        <div class="url"><b>${item.url} </b>&nbsp;<span class="price">$${item.price}</span></div>
+                                        <div class="url"><b>${item.url} </b>&nbsp;<span class="price">$${item.price}</span>&nbsp;<span class="quantity">     x ${item.quantity}</span></div>
                                         <div class="user"><b>Ordered by:</b> ${order.username}</div>
                                     </div>
                                     <button type="button" class="btn add-item" data-toggle="modal" onClick="changeButtonId('${item.id},${order.username}')" data-target="#myModal">Edit</button>
@@ -261,6 +270,7 @@
                                 <div class="col-8">
                                     <div class="url"><b>${item.url}</b></div>
                                     <div class="price2">$${item.price}</div>
+                                    <div class="quantity2">$${item.quantity}</div>
                                 </div>
                                 <button type="button" class="btn add-item" data-toggle="modal" onClick="changeButtonId('${item.id},${displayusername}')" data-target="#myModal">Edit</button>
                                 <div class="col-2"><button id="remove-b" class="btn delete-item" onClick="deleteItem('${item.id},${displaygroupid},${displayusername}')">X </button></div>
@@ -324,7 +334,10 @@
             margin-right: 0.5rem;
         }
         .price-input{
-            width: 80px;
+            width: 70px;
+        }
+        .quantity-input{
+            width: 50px;
         }
         .add-item{
             font-size: 14px;
@@ -354,6 +367,14 @@
             font-style: italic;
         }
         .price2{
+            color: #5e5e5e;
+            margin-left: 1.5rem;
+        }
+        .quantity{
+            color: #5e5e5e;
+            font-style: italic;
+        }
+        .quantity2{
             color: #5e5e5e;
             margin-left: 1.5rem;
         }
