@@ -48,7 +48,7 @@ const findSum = (group) => {
     for (let order of group.orders) {
         for (let item of order.items) {
             // console.log(item);
-            sum += parseFloat(item.price);
+            sum += parseFloat(item.total_price);
         }
     }
     return sum;
@@ -394,6 +394,7 @@ app.post('/groups/:username/:group_id/user/add_item', async (req, res) => {
         "url": url,
         "price": price,
         "quantity" : quantity,
+        "total_price": price*quantity
     };
     // console.log(push_item);
 
@@ -466,6 +467,7 @@ app.post('/groups/:username/:group_id/user/:item_id/:orderedBy/edit_item', async
         "url": website,
         "price": price,
         "quantity" : quantity,
+        "total_price" : price*quantity,
     };
     const setJson = {[setString] : set_item};
     // console.log(setJson);
